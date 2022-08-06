@@ -12,9 +12,6 @@ public class DashboardPage {
     private SelenideElement heading = $("[data-test-id=dashboard]");
     private ElementsCollection cards = $$(".list__item");
 
-    private SelenideElement topUpButton1 = $("[data-test-id='92df3f1c-a033-48e6-8390-206f6b1f56c0'] .button");
-    private SelenideElement topUpButton2 = $("[data-test-id='0f3f5c2a-249e-4c3d-8287-09f7a039391d'] .button");
-
     public DashboardPage() {
         heading.shouldBe(visible);
     }
@@ -22,9 +19,20 @@ public class DashboardPage {
     public String getCardBalance(String cardNumber) {
         return extractBalance(cards.find(text(cardNumber.substring(15, 19))).getText());
     }
+
     public String getCardBalance(int id) {
         String text = cards.get(id - 1).text();
         return extractBalance(text);
+    }
+
+    public TransferPage cardSelectToBalanceTransfer(String cardNumber) {
+        cards.findBy(text(cardNumber.substring(15, 19))).$("[data-test-id='action-deposit']").click();
+        return new TransferPage();
+    }
+
+    public TransferPage cardSelectToBalanceTransfer(int id) {
+        cards.get(id - 1).$("[data-test-id='action-deposit']").click();
+        return new TransferPage();
     }
 
     private String extractBalance(String text) {
